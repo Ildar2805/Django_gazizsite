@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block content %}
+    <div class="middle">
+        <div class="container">
+            <div class="container-middle">
+                <div class="post-list">
+                    {% for post in posts %}
+                    <article class="post">
+                        <div class="post-preview">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.name }}" class="post-img" >
+                            {% endif %}
+                        </div>
+                        <div class="post-content" style="width:100%">
+                            <ul class="post-categories" >
+                                <li><span class="post-category">{{ post.cat }}</span></li>
+                            </ul>
+                            <h2 class="post-title"><a href="{{ post.get_absolute_url }}" class="post-title-link">{{ post.title }}</a></h2>
+                            <div class="post-params">
+                                <span class="post-date">{{ post.time_create|date:"d-m-Y в H:i" }}</span>
+                            </div>
+                            <p class="post-source"><a href="{{ post.source }}">Перейти на сайт источника</a></p>
+                        </div>
+                        <div class="post-info">{{ post.content|linebreaks|truncatewords:50 }}</div>
+                        <p class="post-link-read"><a href="{{ post.get_absolute_url }}">Читать пост</a></p>
+                    </article>
+                    {% endfor %}
+                </div> <!--/.post-list-->
+                <div class="post-cat">
+                    <ul>
+                        {% if cat_selected == 0 %}
+                            <li class="category-selected">Все категории</li>
+                        {% else %}
+                            <li class="category"><a class="category" href="{% url 'posts' %}">Все категории</a></li>
+                        {% endif %}
+
+                        {% show_categories 'name' cat_selected %} <!--тег из blog_tags с параметрами-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

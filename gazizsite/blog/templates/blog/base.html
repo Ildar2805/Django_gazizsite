@@ -1,0 +1,92 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+</head>
+<body>
+    <header class="welcome"> <!--style="background-image: url('{% static 'blog/images/banner-bg.jpg' %}')"-->
+        <div class="container container-welcome">
+            <div class="top">
+                <a href="{% url 'posts' %}" class="top-logo"><img src="{% static 'blog/svg/GazizSite.png' %}" alt="NOEMI" class="top-logo-image"></a>
+                <nav class="top-menu">
+
+                    <ul class="top-menu-list">
+                        {% for m in menu %}
+                            <li class="top-menu-item"><a class="top-menu-link" href="{% url m.url_name %}" >{{ m.title }}</a></li>
+                        {% endfor %}
+                        {% if request.user.is_authenticated %}
+                            <li class="top-menu-item">{{ user.username }} | <a class="top-menu-link" href="{% url 'logout' %}">Выйти</a></li>
+                        {% else %}
+                            <li class="top-menu-item"><a class="top-menu-link" href="{% url 'register' %}">Регистрация</a> | <a class="top-menu-link" href="{% url 'login' %}">Войти</a></li>
+                        {% endif %}
+                        <li class="top-menu-item"><a class="top-menu-icon" href="#"></a></li>
+                    </ul>
+                </nav>
+
+            </div>
+
+            <div class="intro">
+                <h1 class="intro-title">все интересные статьи</h1>
+            </div>
+
+        </div> <!--/.container-->
+    </header> <!--/.welcome-->
+
+    {% block content%}
+    {% endblock %}
+    {% if page_obj.has_other_pages %}
+    <nav class="list-pages">
+        <ul>
+            {% if page_obj.has_previous %}
+                <li class="page-num">
+                    <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                </li>
+            {% endif %}
+            {% for p in paginator.page_range %}
+                {% if page_obj.number == p %}
+                    <li class="page-num page-num-selected">{{ p }}</li>
+                {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                    <li class="page-num">
+                        <a href="?page={{ p }}">{{ p }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-num">
+                    <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    <footer class="footer-site">
+
+            <div class="socials">
+                <ul class="socials-info">
+                    <li class="socials-item">
+                        <a href="#" class="socials-link socials-link-dribbble"></a>
+                    </li>
+                    <li class="socials-item">
+                        <a href="#" class="socials-link socials-link-pinterest"></a>
+                    </li>
+                    <li class="socials-item">
+                        <a href="#" class="socials-link socials-link-tumblr"></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="copyrights">
+                <a>Copyright © 2009–2022 City Blog LLC.</a>
+            </div>
+
+        </div> <!--/.container-->
+    </footer>
+</body>
+</html>
